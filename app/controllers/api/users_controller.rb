@@ -12,4 +12,12 @@ class Api::UsersController < ApplicationController
       render json: {errors: @user.errors.full_messages}, status: :unprocessable_entity
     end
   end
+
+  def show
+    # p 'current user'
+    # p current_user
+    # p 'current store'
+    # p current_store
+    render json: {}
+  end
 end

@@ -1,5 +1,46 @@
 /* global Vue, VueRouter, axios */
 
+var StoreSignupPage = {
+  template: "#store-signup-page",
+  data: function() {
+    return {
+      errors: [],
+      store: {
+        password: "",
+        passwordConfirmation: "",
+        title: "",
+        email: "",
+        address: "",
+        city: "",
+        zip_code: ""
+      }
+    };
+  },
+  methods: {
+    submit: function() {
+      var params = {
+        title: this.store.title,
+        password: this.store.password,
+        passwordConfirmation: this.store.passwordConfirmation,
+        email: this.store.email,
+        address: this.store.address,
+        city: this.store.city,
+        zip_code: this.store.zip_code
+      };
+      axios
+        .post("/api/stores", params)
+        .then(function(response) {
+          router.push("/login");
+        })
+        .catch(
+          function(error) {
+            this.errors = error.response.data.errors;
+          }.bind(this)
+        );
+    }
+  }
+};
+
 var LogoutPage = {
   template: "<h1>Logout</h1>",
   created: function() {
@@ -15,13 +56,16 @@ var LoginPage = {
     return {
       email: "",
       password: "",
+      user_type: "",
       errors: []
     };
   },
   methods: {
     submit: function() {
       var params = {
-        email: this.email, password: this.password
+        email: this.email,
+        password: this.password,
+        user_type: this.user_type
       };
       axios
         .post("/api/sessions", params)
@@ -29,6 +73,7 @@ var LoginPage = {
           axios.defaults.headers.common["Authorization"] =
             "Bearer " + response.data.jwt;
           localStorage.setItem("jwt", response.data.jwt);
+          localStorage.setItem("email", response.data.email);
           router.push("/");
         })
         .catch(
@@ -41,6 +86,48 @@ var LoginPage = {
     }
   }
 };
+
+var CardsNewPage = {
+  template: "#cards-new-page",
+  data: function() {
+    return {
+      errors: [],
+      card: {
+        year_made: "",
+        player: "",
+        quality: "",
+        notes: "",
+        user_id: "",
+        store_id: "",
+        confirmed: "",
+        value: "",
+        quality: ""
+      }
+    };
+  },
+  methods: {
+    submit: function() {
+      var params = {
+        player: this.card.player,
+        year_made: this.card.year_made,
+        notes: this.card.notes,
+        value: this.card.value,
+        quality: this.card.quality
+      };
+      axios
+        .post("/api/cards", params)
+        .then(function(response) {
+          router.push("/");
+        })
+        .catch(
+          function(error) {
+            this.errors = error.response.data.errors;
+          }.bind(this)
+        );
+    }
+  }
+};
+
 
 var SignupPage = {
   template: "#signup-page",
@@ -84,7 +171,12 @@ var HomePage = {
       message: "Welcome to Vue.js!"
     };
   },
-  created: function() {},
+  created: function() {
+    axios.get('/api/users/show').then(function(response) {
+      console.log('here is the person who is logged in');
+      console.log(response.data)
+    })
+  },
   methods: {},
   computed: {}
 };
@@ -94,7 +186,9 @@ var router = new VueRouter({
     { path: "/", component: HomePage },
     { path: "/login", component: LoginPage },
     { path: "/logout", component: LogoutPage },
-    { path: "/signup", component: SignupPage }
+    { path: "/signup", component: SignupPage },
+    { path: "/cards/new", component: CardsNewPage },
+    { path: "/store-signup", component: StoreSignupPage }
   ],
   scrollBehavior: function(to, from, savedPosition) {
     return { x: 0, y: 0 };
@@ -106,9 +200,13 @@ var app = new Vue({
   router: router,
   created: function() {
     var jwt = localStorage.getItem("jwt");
+    var email = localStorage.getItem("email");
     if (jwt) {
       axios.defaults.headers.common["Authorization"] = jwt;
     }
     console.log(jwt);
+    console.log(email);
+    console.log(localStorage.getItem("email"));
+
   }
 });

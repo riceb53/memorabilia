@@ -6,5 +6,7 @@ Rails.application.routes.draw do
     patch "/cards" => "cards#update"
     post "/users" => "users#create"
     post "/sessions" => "sessions#create"
+    post "/stores" => "stores#create"
+    get "/users/show" => "users#show"
   end
 end
