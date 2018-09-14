@@ -9,7 +9,32 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 require 'csv'
 
-state_id = 31
+puts Benchmark.measure {
+
+csv_text = File.read(Rails.root.join('lib/seeds/zip_codes_final.csv'))
+csv = CSV.parse(csv_text, :headers => true)
+
+csv.each do |row|
+  # Moulding.create!(row.to_hash)
+
+
+  state = State.new(name: row["State"], abbreviation: row["Abbreviation"])
+  state.save
+  # p row
+  # state = State.find_by(name: row["State"])
+  # p row["ZIP code"]
+  zip_code = ZipCode.new(value: row.to_hash["ZIP code"], state_id: state.id)
+  zip_code.save!
+  # zip_code.save
+  # p zip_code
+
+end
+
+
+ }
+
+
+state_id = 1
 
 50.times do
   state = State.find(state_id)
@@ -26,26 +51,3 @@ state_id = 31
   store.save!
   state_id += 1
 end
-# puts Benchmark.measure {
-
-# csv_text = File.read(Rails.root.join('lib/seeds/zip_codes_final.csv'))
-# csv = CSV.parse(csv_text, :headers => true)
-
-# csv.each do |row|
-#   # Moulding.create!(row.to_hash)
-
-
-#   # state = State.new(name: row["State"], abbreviation: row["Abbreviation"])
-#   # state.save
-#   # p row
-#   state = State.find_by(name: row["State"])
-#   # p row["ZIP code"]
-#   zip_code = ZipCode.new(value: row.to_hash["ZIP code"], state_id: state.id)
-#   zip_code.save!
-#   # zip_code.save
-#   # p zip_code
-
-# end
-
-
-#  }
