@@ -61,6 +61,9 @@ var CardsIndexPage = {
     axios.get('/api/cards').then(function(response) {
       console.log(response.data)
       this.cards = response.data;
+      if (this.cards.message === 'Unauthorized') {
+        router.push('/login');
+      }
     }.bind(this))
   }
 };
@@ -90,8 +93,12 @@ var LoginPage = {
             "Bearer " + response.data.jwt;
           localStorage.setItem("jwt", response.data.jwt);
           localStorage.setItem("email", response.data.email);
-          router.push("/");
-        })
+          if (this.user_type === 'user') {
+            router.push("/");
+          } else if (this.user_type === 'store') {
+            router.push("/#/users");
+          }
+        }.bind(this))
         .catch(
           function(error) {
             this.errors = ["Invalid email or password."];
@@ -180,6 +187,10 @@ var CardsEditPage = {
         hr: "",
         sb: "",
         year_played: ""
+      },
+      user: {
+        type: "",
+        info: {}
       }
     };
   },
@@ -189,6 +200,10 @@ var CardsEditPage = {
       console.log(response.data)
       this.card = response.data;
       this.stats = response.data.stats;
+    }.bind(this))
+    axios.get('/api/users/show').then(function(response) {
+      console.log(response.data)
+      this.user = response.data
     }.bind(this))
   },
   methods: {
@@ -296,9 +311,9 @@ var app = new Vue({
     if (jwt) {
       axios.defaults.headers.common["Authorization"] = jwt;
     }
-    console.log(jwt);
-    console.log(email);
-    console.log(localStorage.getItem("email"));
+    // console.log(jwt);
+    // console.log(email);
+    // console.log(localStorage.getItem("email"));
 
   }
 });

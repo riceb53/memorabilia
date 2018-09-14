@@ -8,6 +8,7 @@ Rails.application.routes.draw do
     post "/sessions" => "sessions#create"
     post "/stores" => "stores#create"
     get "/users/show" => "users#show"
+    get "/users" => "users#index"
     get "/cards" => "cards#index"
     get "/cards/:id" => "cards#show"
   end

@@ -1,3 +1,10 @@
-json.id @user.id
-json.name @user.name
-json.email @user.email
+json.type @type
+json.info do
+  json.id @user.id
+  if @type == 'user'
+    json.name @user.name
+  else
+    json.title @user.title
+  end
+  json.email @user.email
+end

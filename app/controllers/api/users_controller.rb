@@ -1,4 +1,11 @@
 class Api::UsersController < ApplicationController
+  def index
+    if current_store
+      @users = current_store.users
+    end
+    render 'index.json.jbuilder'
+  end
+
   def create
     @user = User.new(
       name: params[:name],
@@ -27,6 +34,13 @@ class Api::UsersController < ApplicationController
     # p current_user
     # p 'current store'
     # p current_store
-    render json: {}
+    if current_user
+      @user = current_user
+      @type = 'user'
+    elsif current_store
+      @user = current_store
+      @type = 'store'
+    end
+    render 'show.json.jbuilder'
   end
 end

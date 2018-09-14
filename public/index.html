@@ -66,8 +66,8 @@
           <div class="row">
             <div class="col-lg-8 col-md-10 mx-auto">
               <div class="site-heading">
-                <h1>Clean Blog</h1>
-                <span class="subheading">A Blog Theme by Start Bootstrap</span>
+                <h1>Start your memorabilia journey here</h1>
+                <span class="subheading">Upload your cards to gain stats</span>
               </div>
             </div>
           </div>
@@ -174,15 +174,12 @@
 
 <template id="cards-edit-page">
   <div class="vue-component">
-
     <div class="container">
       <h1>Edit a card:</h1>
       <ul>
         <!-- make happy/sad paths -->
         <li class="text-danger" v-for="error in errors">{{ error }}</li>
       </ul>
-
-      {{card}}
       <div class="form-group">
         <label>Player</label>
         <input type="text" class="form-control" v-model="card.player">
@@ -203,7 +200,8 @@
         <label>Estimated Value:</label>
         <input type="text" class="form-control" v-model="card.value">
       </div>
-      <div class="form-group">
+
+      <div class="form-group" v-if="user.type === 'store'">
         <label>Confirmed:</label>
         <input type="checkbox" class="form-control" v-model="card.confirmed">
       </div>
@@ -246,77 +244,32 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-          <div class="post-preview">
+          <h1>Which card would you like to edit?</h1>
+          <div class="post-preview" v-for="card in cards">
             <a href="post.html">
               <h2 class="post-title">
-                Man must explore, and this is exploration at its greatest
+
+                {{ card.player }}
               </h2>
               <h3 class="post-subtitle">
-                Problems look mighty small from 150 miles up
+                {{ card.user.email }}
+                {{ card.year_made }}
               </h3>
             </a>
-            <p class="post-meta">Posted by
-              <a href="#">Start Bootstrap</a>
-              on September 24, 2018</p>
+            <p class="post-meta">
+              <!-- <button class="btn btn-primary" v-bind:href="'/#/cards/' + card.id + '/edit/'">Submit</button> -->
+
+              <a class="btn btn-primary" v-bind:href="'/#/cards/' + card.id + '/edit/'">Edit</a>
+            </p>
+            <hr>
           </div>
-          <hr>
-          <div class="post-preview">
-            <a href="post.html">
-              <h2 class="post-title">
-                I believe every human has a finite number of heartbeats. I don't intend to waste any of mine.
-              </h2>
-            </a>
-            <p class="post-meta">Posted by
-              <a href="#">Start Bootstrap</a>
-              on September 18, 2018</p>
-          </div>
-          <hr>
-          <div class="post-preview">
-            <a href="post.html">
-              <h2 class="post-title">
-                Science has not yet mastered prophecy
-              </h2>
-              <h3 class="post-subtitle">
-                We predict too much for the next year and yet far too little for the next ten.
-              </h3>
-            </a>
-            <p class="post-meta">Posted by
-              <a href="#">Start Bootstrap</a>
-              on August 24, 2018</p>
-          </div>
-          <hr>
-          <div class="post-preview">
-            <a href="post.html">
-              <h2 class="post-title">
-                Failure is not an option
-              </h2>
-              <h3 class="post-subtitle">
-                Many say exploration is part of our destiny, but it’s actually our duty to future generations.
-              </h3>
-            </a>
-            <p class="post-meta">Posted by
-              <a href="#">Start Bootstrap</a>
-              on July 8, 2018</p>
-          </div>
-          <hr>
           <!-- Pager -->
           <div class="clearfix">
-            <a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>
+            <a class="btn btn-primary float-right" href="/#/cards/new">Add another card &rarr;</a>
           </div>
         </div>
       </div>
     </div>
-    <div class="container">
-      <h1>Which card would you like to edit?:</h1>
-      <div v-for="card in cards">
-        <p>{{ card.user.email }}</p>
-        <p>{{ card.player }}</p>
-        <p>{{ card.year_made }}</p>
-        <a v-bind:href="'/#/cards/' + card.id + '/edit/'">Edit {{ card.name }}</a>
-      </div>
-      <button class="btn btn-primary" v-on:click="submit()">Submit</button>
-    </div>
-
   </div>
 </template>
 
@@ -341,6 +294,69 @@
 
       <input type="radio" name="user_type" value="user" v-model="user_type">User<br>
       <input type="radio" name="user_type" value="store" v-model="user_type">Store<br>
+      <button class="btn btn-primary" v-on:click="submit()">Submit</button>
+    </div>
+
+  </div>
+</template>
+
+
+<template id="cards-new-page">
+  <div class="vue-component">
+
+    <div class="container">
+      <h1>Add a new card:</h1>
+      <ul>
+        <!-- make happy/sad paths -->
+        <li class="text-danger" v-for="error in errors">{{ error }}</li>
+      </ul>
+
+      <div class="form-group">
+        <label>Player</label>
+        <input type="text" class="form-control" v-model="card.player">
+      </div>
+      <div class="form-group">
+        <label>What year is this card from?</label>
+        <input type="text" class="form-control" v-model="card.year_made">
+      </div>
+      <div class="form-group">
+        <label>Quality</label>
+        <input type="text" class="form-control" v-model="card.quality">
+      </div>
+      <div class="form-group">
+        <label>Notes:</label>
+        <input type="text" class="form-control" v-model="card.notes">
+      </div>
+      <div class="form-group">
+        <label>Estimated Value:</label>
+        <input type="text" class="form-control" v-model="card.value">
+      </div>
+      <h3>Stats</h3>
+      <div class="form-group">
+        <label>Runs:</label>
+        <input type="text" class="form-control" v-model="stats.runs">
+      </div>
+      <div class="form-group">
+        <label>Hits:</label>
+        <input type="text" class="form-control" v-model="stats.hits">
+      </div>
+
+      <div class="form-group">
+        <label>Batting Average:</label>
+        <input type="text" class="form-control" v-model="stats.ba">
+      </div>
+      <div class="form-group">
+        <label>Home Runs:</label>
+        <input type="text" class="form-control" v-model="stats.hr">
+      </div>
+      <div class="form-group">
+        <label>Stolen Bases:</label>
+        <input type="text" class="form-control" v-model="stats.sb">
+      </div>
+      <div class="form-group">
+        <label>Year Played:</label>
+        <input type="text" class="form-control" v-model="stats.year_played">
+      </div>
       <button class="btn btn-primary" v-on:click="submit()">Submit</button>
     </div>
 

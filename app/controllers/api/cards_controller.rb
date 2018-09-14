@@ -1,11 +1,15 @@
 class Api::CardsController < ApplicationController
   def index
+    p current_user
     if current_store
       @cards = current_store.cards
-    else
+      render 'index.json.jbuilder'
+    elsif current_user
       @cards = current_user.cards
+      render 'index.json.jbuilder'
+    else
+      render json: {message: "Unauthorized"}
     end
-    render 'index.json.jbuilder'
   end
 
   def show
@@ -77,3 +81,5 @@ class Api::CardsController < ApplicationController
     end
   end
 end
+
+
