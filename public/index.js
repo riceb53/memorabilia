@@ -50,6 +50,22 @@ var LogoutPage = {
   }
 };
 
+var CardsIndexPage = {
+  template: "#cards-index-page",
+  data: function() {
+    return {
+      cards: []
+    }
+  },
+  created: function() {
+    axios.get('/api/cards').then(function(response) {
+      console.log(response.data)
+      this.cards = response.data;
+    }.bind(this))
+  }
+};
+
+
 var LoginPage = {
   template: "#login-page",
   data: function() {
@@ -93,8 +109,8 @@ var CardsNewPage = {
     return {
       errors: [],
       card: {
-        year_made: "",
         player: "",
+        year_made: "",
         quality: "",
         notes: "",
         user_id: "",
@@ -102,6 +118,14 @@ var CardsNewPage = {
         confirmed: "",
         value: "",
         quality: ""
+      },
+      stats: {
+        runs: "",
+        hits: "",
+        ba: "",
+        hr: "",
+        sb: "",
+        year_played: ""
       }
     };
   },
@@ -112,10 +136,74 @@ var CardsNewPage = {
         year_made: this.card.year_made,
         notes: this.card.notes,
         value: this.card.value,
-        quality: this.card.quality
+        quality: this.card.quality,
+        stats: this.stats
       };
+
+      console.log(params)
+      console.log(this.card)
+      console.log(params.year_made)
       axios
         .post("/api/cards", params)
+        .then(function(response) {
+          router.push("/");
+        })
+        .catch(
+          function(error) {
+            this.errors = error.response.data.errors;
+          }.bind(this)
+        );
+    }
+  }
+};
+
+var CardsEditPage = {
+  template: "#cards-edit-page",
+  data: function() {
+    return {
+      errors: [],
+      card: {
+        player: "",
+        year_made: "",
+        quality: "",
+        notes: "",
+        user_id: "",
+        store_id: "",
+        confirmed: "",
+        value: "",
+        quality: ""
+      },
+      stats: {
+        runs: "",
+        hits: "",
+        ba: "",
+        hr: "",
+        sb: "",
+        year_played: ""
+      }
+    };
+  },
+  created: function() {
+    axios.get('/api/cards/' + this.$route.params.id).then(function(response) {
+      console.log('response.data')
+      console.log(response.data)
+      this.card = response.data;
+      this.stats = response.data.stats;
+    }.bind(this))
+  },
+  methods: {
+    submit: function() {
+      var params = {
+        confirmed: this.card.confirmed,
+        player: this.card.player,
+        year_made: this.card.year_made,
+        notes: this.card.notes,
+        value: this.card.value,
+        quality: this.card.quality,
+        stats: this.stats
+      };
+      axios
+        .patch("/api/cards/" + this.$route.params.id, params)
         .then(function(response) {
           router.push("/");
         })
@@ -183,11 +271,13 @@ var HomePage = {
 
 var router = new VueRouter({
   routes: [
-    { path: "/", component: HomePage },
+    { path: "/", component: CardsIndexPage },
     { path: "/login", component: LoginPage },
     { path: "/logout", component: LogoutPage },
     { path: "/signup", component: SignupPage },
     { path: "/cards/new", component: CardsNewPage },
+    { path: "/cards/:id/edit", component: CardsEditPage },
+    { path: "/cards", component: CardsIndexPage },
     { path: "/store-signup", component: StoreSignupPage }
   ],
   scrollBehavior: function(to, from, savedPosition) {

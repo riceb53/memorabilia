@@ -1,4 +1,18 @@
 class Api::CardsController < ApplicationController
+  def index
+    if current_store
+      @cards = current_store.cards
+    else
+      @cards = current_user.cards
+    end
+    render 'index.json.jbuilder'
+  end
+
+  def show
+    @card = Card.find(params[:id])
+    render 'show.json.jbuilder'
+  end
+
   def create
     if current_user || current_store
       @card = Card.new(
@@ -14,6 +28,18 @@ class Api::CardsController < ApplicationController
         value: params[:value],
       )
       @card.save
+
+      stat = Stat.new(
+        runs: params[:stats][:runs],
+        hits: params[:stats][:hits],
+        ba: params[:stats][:ba],
+        hr: params[:stats][:hr],
+        sb: params[:stats][:sb],
+        year_played: params[:stats][:year_played],
+        card_id: @card.id
+      )
+
+      stat.save
       render 'show.json.jbuilder'
     else
       render json: {}
@@ -28,11 +54,22 @@ class Api::CardsController < ApplicationController
         player: params[:player],
         quality: params[:quality],
         notes: params[:notes],
-        user_id: current_store.user.id,
-        store_id: current_user.stores[0],
-        # store_id: current_stores.id || current_user.store,
+        user_id: current_store.users[0].id,
+        store_id: current_store.id,
+        # store_id: current_store.id || current_user.store,
         confirmed: params[:confirmed] || false,
         value: params[:value],
+      )
+
+      stat = Stat.find(params[:stats][:id])
+      stat.update(
+        runs: params[:stats][:runs],
+        hits: params[:stats][:hits],
+        ba: params[:stats][:ba],
+        hr: params[:stats][:hr],
+        sb: params[:stats][:sb],
+        year_played: params[:stats][:year_played],
+        card_id: @card.id
       )
       render 'show.json.jbuilder'
     else

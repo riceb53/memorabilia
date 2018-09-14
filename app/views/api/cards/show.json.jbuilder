@@ -1,3 +1,4 @@
+json.id @card.id
 json.year_made @card.year_made
 json.player @card.player
 json.quality @card.quality
@@ -6,3 +7,4 @@ json.user_id @card.user_id
 json.store_id @card.store_id
 json.confirmed @card.confirmed
 json.value @card.value
+json.stats @card.stats[0]
