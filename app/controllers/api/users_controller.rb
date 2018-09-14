@@ -14,6 +14,7 @@ class Api::UsersController < ApplicationController
       password_confirmation: params[:password_confirmation],
       zip_code: params[:zip_code]
     )
+    @type = 'user'
     if @user.save
       zip_code = ZipCode.find_by(value: params[:zip_code])
       state = zip_code.state
