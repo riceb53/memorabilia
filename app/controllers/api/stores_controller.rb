@@ -1,4 +1,9 @@
 class Api::StoresController < ApplicationController
+  def index
+    @stores = Store.all
+    render 'index.json.jbuilder'
+  end
+
   def create
     @store = Store.new(
       title: params[:title],

@@ -239,6 +239,45 @@
 </template>
 
 
+<template id="stores-index-page">
+  <div class="vue-component">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <h1>Which card would you like to edit?</h1>
+          <div class="post-preview" v-for="store in stores">
+            <a>
+              <h2 class="post-title">
+
+                {{ store.title }}
+              </h2>
+              <h3 class="post-subtitle">
+                <p>id: {{ store.id }}</p>
+                <p>email: {{ store.email }}</p>
+                <p>address: {{ store.address }}</p>
+                <p>city: {{ store.city }}</p>
+                <p>state_id: {{ store.state_id }}</p>
+
+                <p>state: {{ store.state.name }}</p>
+              </h3>
+            </a>
+            <p class="post-meta">
+              <!-- <button class="btn btn-primary" v-bind:href="'/#/cards/' + card.id + '/edit/'">Submit</button> -->
+
+              <!-- <a class="btn btn-primary" v-bind:href="'/#/cards/' + card.id + '/edit/'">Edit</a> -->
+            </p>
+            <hr>
+          </div>
+          <!-- Pager -->
+          <div class="clearfix">
+            <!-- <a class="btn btn-primary float-right" href="/#/cards/new">Add another card &rarr;</a> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
 <template id="cards-index-page">
   <div class="vue-component">
     <div class="container">

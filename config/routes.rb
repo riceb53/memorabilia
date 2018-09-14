@@ -10,6 +10,8 @@ Rails.application.routes.draw do
     get "/users/show" => "users#show"
     get "/users" => "users#index"
     get "/cards" => "cards#index"
+    get "/stores" => "stores#index"
     get "/cards/:id" => "cards#show"
+
   end
 end

@@ -68,6 +68,21 @@ var CardsIndexPage = {
   }
 };
 
+var StoresIndexPage = {
+  template: "#stores-index-page",
+  data: function() {
+    return {
+      stores: []
+    }
+  },
+  created: function() {
+    axios.get('/api/stores').then(function(response) {
+      console.log(response.data)
+      this.stores = response.data;
+    }.bind(this))
+  }
+};
+
 
 var LoginPage = {
   template: "#login-page",
@@ -295,6 +310,7 @@ var router = new VueRouter({
     { path: "/cards/new", component: CardsNewPage },
     { path: "/cards/:id/edit", component: CardsEditPage },
     { path: "/cards", component: CardsIndexPage },
+    { path: "/stores", component: StoresIndexPage },
     { path: "/store-signup", component: StoreSignupPage }
   ],
   scrollBehavior: function(to, from, savedPosition) {
