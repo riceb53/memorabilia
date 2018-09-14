@@ -225,6 +225,7 @@ var SignupPage = {
       email: "",
       password: "",
       passwordConfirmation: "",
+      zip_code: "",
       errors: []
     };
   },
@@ -234,6 +235,7 @@ var SignupPage = {
         name: this.name,
         email: this.email,
         password: this.password,
+        zip_code: this.zip_code,
         password_confirmation: this.passwordConfirmation
       };
       axios
