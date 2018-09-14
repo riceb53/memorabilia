@@ -21,16 +21,8 @@ csv.each do |row|
   state = State.new(name: row["State"], abbreviation: row["Abbreviation"])
   state.save
 
-  p 'row'
-  p row
-
-  p 'state'
-  p state
-
-  # state = State.find_by(name: row["State"])
+  state = State.find_by(name: row["State"])
   # p row["ZIP code"]
-  p 'zip code'
-  p row.to_hash["ZIP code"]
   zip_code = ZipCode.new(value: row.to_hash["ZIP code"], state_id: state.id)
   zip_code.save!
   # zip_code.save
@@ -42,7 +34,7 @@ end
  }
 
 
-state_id = 2
+state_id = 3
 
 50.times do
   state = State.find(state_id)
