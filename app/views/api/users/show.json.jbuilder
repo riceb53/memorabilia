@@ -1,4 +1,6 @@
-json.type @type
+if @type
+  json.type @type
+end
 json.info do
   json.id @user.id
   if @type == 'user'
